@@ -6,7 +6,7 @@
 <script>
 import GoodsItem from "./GoodsItem.vue";
 export default {
-  name: "Goods",
+  name: "GoodsList",
   props: {
     good: {
       type: Array,

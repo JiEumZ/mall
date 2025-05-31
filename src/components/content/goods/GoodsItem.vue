@@ -1,6 +1,6 @@
 <template>
-  <div class="goodsitem">
-    <img :src="goodItem.show.img" alt="" />
+  <div class="goodsitem" @click="itemClick">
+    <img :src="showImg" alt="" />
     <div class="goodsitem-info">
       <p>{{ goodItem.title }}</p>
       <span class="price">{{ goodItem.price }}</span>
@@ -14,7 +14,17 @@ export default {
   props: {
     goodItem: {
       type: Object,
-      default: () => [],
+      default: () => {},
+    },
+  },
+  computed: {
+    showImg() {
+      return this.goodItem.image || this.goodItem.show.img;
+    },
+  },
+  methods: {
+    itemClick() {
+      this.$router.push("/detail/" + this.goodItem.iid);
     },
   },
 };
@@ -29,7 +39,7 @@ export default {
   width: 100%;
   border-radius: 5px;
 }
-.goodsitem-info{
+.goodsitem-info {
   position: absolute;
   left: 0;
   right: 0;
@@ -37,27 +47,26 @@ export default {
   font-size: 12px;
   text-align: center;
 }
-.goodsitem-info p{
+.goodsitem-info p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: 3px;
 }
-.goodsitem-info .price{
+.goodsitem-info .price {
   color: var(--color-high-text);
   margin-right: 20px;
 }
-.goodsitem-info .collect{
+.goodsitem-info .collect {
   position: relative;
 }
-.goodsitem-info .collect::before{
-  content: '';
+.goodsitem-info .collect::before {
+  content: "";
   position: absolute;
   left: -15px;
   top: -1px;
   width: 14px;
   height: 14px;
-  background: url('~@/assets/img/home/collect.svg') 0 0/14px 14px;
-  
+  background: url("~@/assets/img/home/collect.svg") 0 0/14px 14px;
 }
 </style>

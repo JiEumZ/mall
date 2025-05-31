@@ -7,8 +7,9 @@
     <tab-cart
       :title="['流行', '新款', '精选']"
       @carClick="pTabClick"
+      ref="tabCart"
     ></tab-cart>
-    <goods :good="showGood"></goods>
+    <GoodsList :good="showGood"></GoodsList>
   </div>
 </template>
 
@@ -18,7 +19,7 @@ import HomeSwiper from "./childComps/HomeSwiper.vue";
 import RecommendView from "./childComps/RecommendView.vue";
 import FeatureView from "./childComps/FeatureView.vue";
 import TabCart from "components/content/tabCart/TabCart.vue";
-import Goods from "components/content/goods/Goods.vue";
+import GoodsList from "components/content/goods/GoodsList.vue";
 
 import { getHomeMultidata, getGoodsData } from "network/home.js";
 
@@ -45,9 +46,11 @@ export default {
     RecommendView,
     FeatureView,
     TabCart,
-    Goods,
+    GoodsList
   },
   created() {
+    // console.log("创建了组件");
+
     /* 
     调用methods中方法 
     */
@@ -56,6 +59,10 @@ export default {
     this.getGoodsData("pop");
     this.getGoodsData("new");
     this.getGoodsData("sell");
+  },
+  mounted() {
+    // tabCart吸顶 获取offsettop
+    // console.log("tabCart吸顶", this.$refs.tabCart.$el.offsetTop);
   },
   computed: {
     showGood() {
@@ -101,6 +108,12 @@ export default {
         this.goods[type].page = page;
       });
     },
+  },
+  activated() {
+    console.log("激活了");
+  },
+  deactivated() {
+    console.log("关闭了");
   },
 };
 </script>
