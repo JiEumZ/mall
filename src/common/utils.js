@@ -47,7 +47,7 @@ export function debounce(func, delay) {
   return function (...args) {
     // args是一个数组，包含了调用debounce时传入的所有参数
     // console.log("debounce", args);
-    
+
     // 如果timer存在，清除之前的定时器 确保每次调用debounce时，之前的定时器都会被清除
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
@@ -56,5 +56,17 @@ export function debounce(func, delay) {
       // this是指向调用debounce时的上下文
       func.apply(this, args);
     }, delay);
+  };
+}
+
+// 节流
+export function throttle(func, delay) {
+  let lastTime = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastTime > delay) {
+      lastTime = now;
+      func.apply(this, args);
+    }
   };
 }

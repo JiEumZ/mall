@@ -5,8 +5,9 @@
       <div slot="center" class="title">
         <div
           v-for="(item, index) in title"
+          :key="index"
           class="title-item"
-          :class="{ active: index == currentIndex }"
+          :class="{ active: index === currentIndex }"
           @click="titleClick(index)"
         >
           {{ item }}
@@ -20,10 +21,17 @@ import NavBar from "components/common/navbar/NavBar.vue";
 
 export default {
   name: "DetailNavBar",
+  props: {
+    currentIndex: {
+      type: Number,
+      default: 0,
+      validator: (val) => val >= 0 && val <= 3,
+    },
+  },
   data() {
     return {
       title: ["商品", "参数", "评论", "推荐"],
-      currentIndex: 0,
+      // currentIndex: 0,
     };
   },
   components: {
@@ -34,7 +42,7 @@ export default {
       this.$router.back();
     },
     titleClick(index) {
-      this.currentIndex = index;
+      // this.currentIndex = index;
       this.$emit("titleClick", index);
     },
   },

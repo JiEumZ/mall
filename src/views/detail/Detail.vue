@@ -1,6 +1,9 @@
 <template>
   <div id="detail">
-    <DetailNavBar @titleClick="titleClick"></DetailNavBar>
+    <DetailNavBar
+      @titleClick="titleClick"
+      :current-index="activeIndex"
+    ></DetailNavBar>
     <DetailSwiper :topImages="topImages"></DetailSwiper>
     <DetailBaseInfo :goods="goods"></DetailBaseInfo>
     <DetailShopInfo :shop="shop"></DetailShopInfo>
@@ -11,6 +14,7 @@
       ref="comment"
     ></DetailCommentInfo>
     <GoodsList :good="recommendList" ref="recommend"></GoodsList>
+    <DetailBottomBar @addToCart="addToCart"></DetailBottomBar>
   </div>
 </template>
 <script>
@@ -21,8 +25,9 @@ import DetailShopInfo from "./childComps/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo.vue";
 import DetailParamsInfo from "./childComps/DetailParamsInfo.vue";
 import DetailCommentInfo from "./childComps/DetailCommentInfo.vue";
+import DetailBottomBar from "./childComps/DetailBottomBar.vue";
 
-import { debounce } from "common/utils.js";
+import { debounce, throttle } from "common/utils.js";
 
 import GoodsList from "components/content/goods/GoodsList.vue";
 
@@ -48,6 +53,7 @@ export default {
       recommendList: [],
       titleTopChange: [],
       getTitleTopY: null,
+      activeIndex: 0, // 当前激活的标题索引
     };
   },
   components: {
@@ -59,6 +65,7 @@ export default {
     DetailParamsInfo,
     DetailCommentInfo,
     GoodsList,
+    DetailBottomBar,
   },
   created() {
     // 1保存传入的id
@@ -115,15 +122,60 @@ export default {
   mounted() {
     // 5获取标题吸顶位置
     this.getTitleTopY();
+
+    // 6监听滚动事件
+    window.addEventListener("scroll", this.handleScroll);
   },
+
+  beforeDestroy() {
+    // 7移除滚动事件监听
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+
   methods: {
     titleClick(index) {
+      this.activeIndex = index; // 更新当前激活的标题索引
       // 点击标题时，滚动到对应组件
       const scrollTop = this.titleTopChange[index];
       window.scrollTo({
         top: scrollTop,
         behavior: "smooth",
       });
+    },
+
+    // 处理滚动事件（节流）
+    handleScroll: throttle(function () {
+      const scrollTop = window.scrollY;
+      const scrollMargin = 50; // 滚动缓冲区
+
+      // 边缘情况：滚动到顶部
+      if (scrollTop <= 0) {
+        this.activeIndex = 0;
+        return;
+      }
+
+      // 从后向前遍历，找到第一个满足条件的索引
+      for (let i = this.titleTopChange.length - 1; i >= 0; i--) {
+        if (scrollTop >= this.titleTopChange[i] - scrollMargin) {
+          this.activeIndex = i;
+          break; //找到第一个满足条件的索引后，立即终止循环
+        }
+      }
+    }, 100),
+
+    addToCart() {
+      // 1、获取购物车商品信息
+      const product = {
+        id: this.id,
+        title: this.goods.title,
+        price: this.goods.realPrice,
+        image: this.topImages[0],
+        desc: this.goods.desc,
+      };
+      // 2、将商品信息添加到购物车
+      // 通过mutation添加到购物车
+      // this.$store.commit("addCart", product);
+      this.$store.dispatch("addCart", product);
     },
   },
 };
