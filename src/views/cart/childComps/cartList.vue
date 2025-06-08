@@ -32,4 +32,8 @@ export default {
 </script>
 
 <style scoped>
+.cart-list {
+  margin-top: 45px;
+  margin-bottom: 82px;
+}
 </style>

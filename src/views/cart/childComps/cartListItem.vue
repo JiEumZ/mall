@@ -1,7 +1,10 @@
 <template>
   <div class="cart-list-item">
     <div class="selector">
-      <CheckButton></CheckButton>
+      <CheckButton
+        :is-checked="product.checked"
+        @click.native="checkClick"
+      ></CheckButton>
     </div>
     <div class="img">
       <img :src="product.image" alt="Product Image" />
@@ -36,7 +39,11 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    checkClick() {
+      this.product.checked = !this.product.checked;
+    },
+  },
   created() {},
   mounted() {},
 };

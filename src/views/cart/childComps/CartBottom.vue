@@ -1,12 +1,12 @@
 <template>
   <div class="cart-bottom">
     <div class="bottom-left">
-      <CheckButton />
+      <CheckButton :is-checked="isSelectAll" @click.native="SelectAll()" />
       <span class="text">全选</span>
     </div>
     <div class="bottom-right">
-      <span class="total-price">合计：￥{{ totalPrice }}</span>
-      <div class="pay-btn">去结算</div>
+      <span class="total-price">合计：{{ totalPrice }}</span>
+      <div class="pay-btn">去结算({{ checkLength }})</div>
     </div>
   </div>
 </template>
@@ -23,9 +23,54 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    totalPrice() {
+      return (
+        "￥" +
+        this.$store.state.cartList
+          .filter((item) => {
+            return item.checked;
+          })
+          .reduce((pre, item) => {
+            return pre + item.price * item.count;
+          }, 0)
+          .toFixed(2)
+      );
+    },
+    checkLength() {
+      return this.$store.state.cartList.filter((item) => {
+        return item.checked;
+      }).length;
+    },
+    isSelectAll() {
+      if (this.$store.state.cartList.length == 0) {
+        return false;
+      }
+      // return !this.$store.state.cartList.filter((item) => {
+      //   return !item.checked;
+      // }).length;
+
+      return !this.$store.state.cartList.find((item) => {
+        return !item.checked;
+      });
+    },
+  },
   watch: {},
-  methods: {},
+  methods: {
+    SelectAll() {
+      if (this.isSelectAll) {
+        // 如果全选了，就取消全选
+        return this.$store.state.cartList.forEach(
+          (item) => (item.checked = false)
+        );
+      } else {
+        // 如果没有全选，就全选
+        return this.$store.state.cartList.forEach(
+          (item) => (item.checked = true)
+        );
+      }
+    },
+  },
   created() {},
   mounted() {},
 };

@@ -1,10 +1,6 @@
 <template>
   <div class="check-button">
-    <div
-      class="iconfont icon-duihao"
-      :class="{ check: isActive }"
-      @click="checkChange"
-    ></div>
+    <div class="iconfont icon-duihao" :class="{ check: isChecked }"></div>
   </div>
 </template>
 
@@ -12,28 +8,30 @@
 export default {
   name: "CheckButton",
   components: {},
-  props: {},
+  props: {
+    isChecked: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
-    return {
-      isActive: false,
-    };
+    return {};
   },
   computed: {},
   watch: {},
-  methods: {
-    checkChange() {
-      this.isActive = !this.isActive;
-    },
-  },
+  methods: {},
   created() {},
   mounted() {},
 };
 </script>
 
 <style scoped>
+.check-button div {
+  font-size: 14px;
+}
 .check {
   color: #fff;
-  background-color: var(--color-tint);
+  background-color: #f53f3f;
   border-radius: 50%;
 }
 </style>

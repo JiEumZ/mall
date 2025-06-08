@@ -29,6 +29,10 @@ export default {
 </script>
 <style scoped>
 .nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-color: var(--color-tint);
   color: #fff;
 }
